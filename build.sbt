@@ -15,7 +15,6 @@ libraryDependencies ++= Seq(
   "com.typesafe.slick" %% "slick" % "3.2.1",
   "org.slf4j" % "slf4j-nop" % "1.6.4",
   "com.typesafe.slick" %% "slick-hikaricp" % "3.2.1",
-  "au.com.carringbushsw" %% "environ" % "1.0-SNAPSHOT",
   // this kills the db interaction
   //"com.zaxxer" % "HikariCP" % "2.4.1",  //@TODO: still need this??
   "org.scalactic" %% "scalactic" % "3.0.4",

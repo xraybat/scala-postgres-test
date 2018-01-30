@@ -4,7 +4,6 @@
 
 import slick.jdbc.PostgresProfile.api._
 import au.com.carringbushsw.Akka.database.{ Actor, Actors, ActorsDao }
-import au.com.carringbushsw.Environ._   // @TODO remove now no longer needed
 import scala.util.{ Try, Failure, Success }
 import scala.concurrent.ExecutionContext.Implicits.global
 
