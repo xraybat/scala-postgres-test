@@ -25,7 +25,6 @@ class Actors(tag: Tag) extends Table[Actor](tag, "actors") {
 object ActorsDao extends TableQuery(new Actors(_)) {
   val db = Database.forConfig("postgresdb")
   assert(db != null)
-  println(">>>> open, db: " + db)
 
   def findById(id: Int): Future[Option[Actor]] = {
     db.run(this.filter(_.id === id).result).map(_.headOption)
@@ -46,9 +45,6 @@ object ActorsDao extends TableQuery(new Actors(_)) {
   // this is the one to go with; from 'opinionated' article but with `Await.result()` added
   // (see https://sap1ens.com/blog/2015/07/26/scala-slick-3-how-to-start/)
   def list() = {
-    println(">>>> list, actors:")
-
-    println(">>>> list pre-Await")
     Await.result( //@TODO remove use of `Await`
       db.run(
         this.result.map(_.foreach {
@@ -56,7 +52,6 @@ object ActorsDao extends TableQuery(new Actors(_)) {
         })
       ),
       Duration.Inf)
-    println(">>>> list post-Await")
   }
 
   /*def list2(): Future[Vector[Actor]] = {
@@ -66,18 +61,14 @@ object ActorsDao extends TableQuery(new Actors(_)) {
   }*/
 
   def names() = {
-    println(">>>> names: w/ Future")
-
     val actors = TableQuery[Actors]
     val q = for (a <- actors) yield a.name
     val a = q.result
     val f = db.run(a)
-    println(">>>> names pre-f.onComplete")
     f.onComplete {
       case Success(value) => println(">>>> name"); value.foreach { println }
       case Failure(e) => e.printStackTrace
     }
-    println(">>>> names post-f.onComplete")
   }
 
   def close() = { println(">>>> closing..."); db.close }

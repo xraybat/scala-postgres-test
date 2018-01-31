@@ -6,27 +6,42 @@ package au.com.carringbushsw.Akka.database
 
 import org.scalatest.FlatSpec
 import slick.jdbc.PostgresProfile.api._
+import scala.util.{ Try, Success, Failure  }
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class TablesSpec extends FlatSpec {
 
   // note: this is testing real tables in a real database
-  "Tables" should "return something" in {
-    assert(true)
-    /*try {
-      Database.forURL(ActorsDatabase.connection, driver = ActorsDatabase.driver) withSession {
-        implicit session =>
-          val actors = TableQuery[Actors]
-          var i = 0
-
-          actors.list foreach { row =>
-            i += 1
-            assert(row._1 == i)
-            println("1: " + row._1 + ", 2: " + row._2 + ", 3: " + row._3)
-          }
-          assert(true)
-      }
+  "Tables" should "return rows" in {
+    try {
+      ActorsDao.list
+      ActorsDao.names
+      assert(true)
     } catch {
-      case _: Throwable => assert(false)
-    }*/
+      case t: Throwable => assert(false)
+    }
   }
+
+  it should "return an actor by id" in {
+    val fById1 = ActorsDao.findById(1)
+    fById1.onComplete {
+      case Success(value) => value match {
+        case Some(actor) => assert(actor.name == "Requester")
+        case None => assert(false)
+      }
+      case Failure(e) => e.printStackTrace; assert(false)
+    }
+  }
+
+  it should "return an actor by name" in {
+    val fByRequester = ActorsDao.findByName("Requester")
+    fByRequester.onComplete {
+      case Success(value) => value match {
+        case Some(actor) => assert(actor.name == "Requester")
+        case None => assert(false)
+      }
+      case Failure(e) => e.printStackTrace; assert(false)
+    }
+  }
+
 } // TablesSpec
