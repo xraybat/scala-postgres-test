@@ -32,6 +32,7 @@ object Main {
         case Success(value) => println(s">>>> findById(1): ${value.getOrElse("(not an actor)")}")
         case Failure(e) => e.printStackTrace
       }
+
       val fById2 = ActorsDao.findById(2)
       fById2.onComplete {
         case Success(value) => value match {
@@ -40,11 +41,13 @@ object Main {
         }
         case Failure(e) => e.printStackTrace
       }
+
       val fByRequester = ActorsDao.findByName("Requester")
       fByRequester.onComplete {
         case Success(value) => println(s">>>> findByName(Requester): ${value.getOrElse("(not an actor)")}")
         case Failure(e) => e.printStackTrace
       }
+
       val fByResponder = ActorsDao.findByName("Responder")
       fByResponder.onComplete {
         case Success(value) => value match {
@@ -53,7 +56,6 @@ object Main {
         }
         case Failure(e) => e.printStackTrace
       }
-
     } finally ActorsDao.close
 
   } // main
